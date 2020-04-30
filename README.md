@@ -14,4 +14,4 @@ Exemple de playbook qui deploie:<cd>
 - Collection "netapp.azure" (https://galaxy.ansible.com/netapp/azure)
 - Microsoft Azure NetApp Files Management Client Library (https://pypi.org/project/azure-mgmt-netapp/)
 - Azure CLi (https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
-- S'authentifier en AZ Cli
+- S'authentifier en AZ Cli (az login)
