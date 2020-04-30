@@ -4,8 +4,7 @@ Exemple de playbook qui deploie:<cd>
 - un "Ressource Groupe"
 - un "Virtual Network"
 - un "subnet" avec le parametrage de la delegation "Microsoft.Netapp/volumes"
-- un "NetApp account"
-- un "Pool"  
+- un "NetApp account"  
 - un "Capacity Pool"
 - un Volume NSFv3
 
