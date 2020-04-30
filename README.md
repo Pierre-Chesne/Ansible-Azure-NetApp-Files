@@ -1,10 +1,13 @@
 # Ansible-Azure-NetApp-Files
 
-Example de playbook qui deploie:<cd>
+Exemple de playbook qui deploie:<cd>
 - un "Ressource Groupe"
 - un "Virtual Network"
-- 
-
+- un "subnet" avec le parametrage de la delegation "Microsoft.Netapp/volumes"
+- un Compte NetApp
+- un "Pool"  
+- un "Capacity Pool"
+- un Volume NSFv3
 
 
 **Prérequis** :<cd/>
