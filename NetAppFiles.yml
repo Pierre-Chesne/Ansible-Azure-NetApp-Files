@@ -1,0 +1,67 @@
+---
+- name: Deploiement d'une Infra. Azure NetApp Files
+  hosts: localhost
+
+  vars:
+    location: westeurope
+    rg_name: RG-infra-ANF
+    vnet_name: Vnet-ANF
+    address_prefixes_cidr_vnet: 10.0.0.0/16
+    subnetfe_name: Subnet-ANF
+    address_prefix_cidr_subnetfe: 10.0.0.0/24
+    account_name_anf: Compte-ANF-001
+    pool_name: Pool-001
+    pool_size: 1
+    volume_name: Vol001
+
+  collections:
+    - netapp.azure
+
+  tasks:
+
+    - name: Installation du ressource groupe
+      azure_rm_resourcegroup:
+        name: "{{ rg_name }}"
+        location: "{{ location }}"
+
+    - name: Installation du virtual network
+      azure_rm_virtualnetwork:
+        name: "{{ vnet_name }}"
+        resource_group: "{{rg_name}}"
+        address_prefixes_cidr: "{{address_prefixes_cidr_vnet}}"
+
+    - name : Installation du subnet
+      azure_rm_subnet:
+        name: "{{ subnetfe_name }}"
+        virtual_network_name: "{{ vnet_name }}"
+        resource_group: "{{ rg_name }}"
+        address_prefix_cidr: "{{ address_prefix_cidr_subnetfe }}"
+
+    - name: delegation du subnet (Microsoft.NetApp/volumes)
+      shell:
+        cmd: az network vnet subnet update -n {{ subnetfe_name }} --vnet-name {{ vnet_name }} -g {{ rg_name }} --delegations Microsoft.NetApp/volumes
+
+    - name: Creation du NetApp account
+      azure_rm_netapp_account:
+        resource_group: "{{ rg_name }}"
+        name: "{{ account_name_anf }}"
+        location: "{{ location }}"
+
+    - name: Creation du NetApp capacity pool
+      azure_rm_netapp_capacity_pool:
+        resource_group: "{{ rg_name }}"
+        account_name: "{{ account_name_anf }}"
+        name: "{{ pool_name }}"
+        location: "{{ location }}"
+        size: "{{ pool_size }}"
+
+    - name: Creation du NetApp volume
+      azure_rm_netapp_volume:
+        resource_group: "{{ rg_name }}"
+        account_name: "{{ account_name_anf }}"
+        pool_name: "{{ pool_name }}"
+        name: "{{ volume_name }}"
+        location: "{{ location }}"
+        file_path: "{{ volume_name }}"
+        virtual_network: "{{ vnet_name }}"
+        subnet_id: "{{ subnetfe_name }}"
